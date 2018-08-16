@@ -9,16 +9,16 @@ photos = UploadSet('photos', IMAGES)
 app.config['UPLOADED_PHOTOS_DEST'] = 'original_images'
 configure_uploads(app, photos)
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST', 'GET'])
 def upload():
     if request.method == 'POST' and 'photo' in request.files:
+        print('content_type ->', request.content_type)
         filename = photos.save(request.files['photo'])
-        return filename
     return render_template('upload.html')
 @app.route('/get_image', methods=['GET'])
 def get_image():
     imageMgr.resizeSave('original_images\\' + request.args.get('name'), int(request.args.get('size')), 'tempimage.png')
-    return send_file('tempimage.jpeg', mimetype='image/gif')
+    return send_file('tempimage.jpeg', mimetype='image/*')
 @app.route('/')
 def index():
     return '/upload -> upload meme, emoji, some hentai... | /get_image?name=imgname&size=imagesize -> get image with given size'
