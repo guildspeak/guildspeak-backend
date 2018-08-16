@@ -3,22 +3,29 @@ import { gql } from 'apollo-server-express'
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
 type User {
-  id: ID!
-  username: String
+  id: ID! @unique @relation(name: "UserId")
+  username: String @unique
   messages: [Message!]! @relation(name: "MessagesFromUser")
 }
 
 type Message {
-  id: ID!
+  id: ID! @unique
   createdAt: String
   updatedAt: String
-  content: String
+  content: String!
   sentBy: User! @relation(name: "MessagesFromUser")
 }
 
+type Guild {
+  id: ID! @unique
+  name: String!
+  users: [User!]! @relation(name: "UserId")
+}
+
 type Query {
-  users: [User]
-  messages: [Message]
+  users: [User!]!
+  guilds: [Guild!]!
+  messages: [Message!]!
 }
 `
 
