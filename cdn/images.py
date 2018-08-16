@@ -2,21 +2,21 @@ import PIL
 from PIL import Image
 
 # newSize = width, height will be the same
-def resize(imageName, newSize):
-    image = Image.open(imageName)
-    percentWidth = (newSize / float(image.size[0]))
-    newHeight = int((float(image.size[1]) * float(percentWidth)))
-    return image.resize((newSize, newHeight), PIL.Image.ANTIALIAS)
-def resizeSave(imageName, newSize, newImageName):
-    resize(imageName, newSize).save(newImageName)
-def getSize(image):
+def resize(image_name, new_size):
+    image = Image.open(image_name)
+    percent_width = (new_size / float(image.size[0]))
+    new_height = int((float(image.size[1]) * float(percent_width)))
+    return image.resize((new_size, new_height), PIL.Image.ANTIALIAS)
+def resize_save(image_name, new_size, new_image_name):
+    resize(image_name, new_size).save(new_image_name)
+def get_size(image):
     return image.size
-def getSizeW(image):
-    return getSize(image)[0]
-def open(imageName):
-    return Image.open(imageName)
-def resizeLoop(imageName, newSize):
-    baseSize = getSizeW(open(imageName))
+def get_size_w(image):
+    return get_size(image)[0]
+def open(image_name):
+    return Image.open(image_name)
+def resize_loop(image_name):
+    baseSize = get_size_w(open(image_name))
     while baseSize > 4:
-        resize(imageName, baseSize)
+        resize(image_name, baseSize)
         baseSize /= 2

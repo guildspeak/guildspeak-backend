@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_file
 from flask_uploads import UploadSet, configure_uploads, IMAGES
-import images as imageMgr
+import images as image_mgr
 
 app = Flask(__name__)
 
@@ -12,16 +12,11 @@ configure_uploads(app, photos)
 @app.route('/upload', methods=['POST', 'GET'])
 def upload():
     if request.method == 'POST' and 'photo' in request.files:
-        print('content_type ->', request.content_type)
-        filename = photos.save(request.files['photo'])
-    return render_template('upload.html')
+        photos.save(request.files['photo'])
 @app.route('/get_image', methods=['GET'])
 def get_image():
-    imageMgr.resizeSave('original_images\\' + request.args.get('name'), int(request.args.get('size')), 'tempimage.png')
+    image_mgr.resize_save('original_images\\' + request.args.get('name'), int(request.args.get('size')), 'tempimage.png')
     return send_file('tempimage.jpeg', mimetype='image/*')
-@app.route('/')
-def index():
-    return '/upload -> upload meme, emoji, some hentai... | /get_image?name=imgname&size=imagesize -> get image with given size'
 
 if(__name__ == '__main__'):
-    app.run(debug=True)
+    app.run(debug=False)
