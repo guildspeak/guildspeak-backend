@@ -1,24 +1,16 @@
 import { dbConnURI } from './utils'
-import fp from 'fastify-plugin'
-import { FastifyInstance } from 'fastify'
 import mongoose from 'mongoose'
 import consola from 'consola'
-const objectId = mongoose.Types.ObjectId
 
-function plugin(fastify: FastifyInstance, options, next) {
-  return mongoose.createConnection(dbConnURI, { useNewUrlParser: true }).then(connection => {
-    fastify.decorate('mongo', {
-      db: connection,
-      ObjectId: objectId,
-    }).addHook('onClose', (fastify, done) => {
-      // @ts-ignore
-      fastify.mongo.db.close(done)
-    })
+async function connection() {
+  try {
+    const connection = await mongoose.connect(dbConnURI, { useNewUrlParser: true })
     consola.success('Connected to database')
-  }).catch(error => {
+    return connection
+  } catch (error) {
     consola.error(error)
     process.exit(1)
-  })
+  }
 }
 
-export default fp(plugin)
+export default connection

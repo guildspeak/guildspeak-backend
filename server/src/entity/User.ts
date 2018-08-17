@@ -23,10 +23,10 @@ export default class User extends Typegoose {
   @arrayProp({ itemsRef: Message })
   messages: Ref<Message>[]
 
-  @prop()
-  avatar?: string
+  // @prop()
+  // avatar?: string
 
-  @prop({ enum: Gender })
-  gender?: Gender
+  // @prop({ enum: Gender })
+  // gender?: Gender
 
 }
