@@ -17,8 +17,8 @@ export default class User extends Typegoose {
   // @prop({ required: true })
   // password: string
 
-  // @prop({ required: true })
-  // createdAt: string
+  @prop({ required: true })
+  createdAt: string
 
   @arrayProp({ itemsRef: Message })
   messages: Ref<Message>[]

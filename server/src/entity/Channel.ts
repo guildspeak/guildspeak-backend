@@ -9,4 +9,7 @@ export default class Channel extends Typegoose {
   @arrayProp({ itemsRef: User, required: true })
   users: Ref<User>[]
 
+  @prop({ required: true })
+  createdAt: string
+
 }

@@ -7,6 +7,12 @@ export default class Guild extends Typegoose {
   @prop({ unique: true, required: true })
   name: string
 
+  @prop({ ref: User, required: true })
+  createdBy: Ref<User>
+
+  @prop({ required: true })
+  createdAt: string
+
   @arrayProp({ itemsRef: User, required: true })
   users: Ref<User>[]
 
