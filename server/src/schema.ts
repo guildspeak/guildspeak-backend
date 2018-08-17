@@ -18,14 +18,14 @@ type Message {
   createdAt: String!
   updatedAt: String
   content: String!
-  sentBy: User! @relation(name: "UserMessages")
+  sentBy: ID! @relation(name: "UserMessages")
 }
 
 type Guild {
   _id: ID! @unique
   name: String!
   createdAt: String!
-  createdBy: User! @relation(name: "UserId")
+  createdBy: ID! @relation(name: "UserId")
   users: [User!]! @relation(name: "UserId")
   channels: [Channel!]! @relation(name: "ChannelId")
 }
