@@ -20,6 +20,13 @@ type Guild {
   id: ID! @unique
   name: String!
   users: [User!]! @relation(name: "UserId")
+  channels: [Channel!]! @relation(name: "ChannelId")
+}
+
+type Channel {
+  id: ID! @unique @relation(name: "ChannelId")
+  name: String!
+  users: [User!]! @relation(name: "UserId")
 }
 
 type Query {
