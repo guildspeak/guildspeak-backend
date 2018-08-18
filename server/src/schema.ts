@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express'
+import { gql, IResolvers } from 'apollo-server-express'
 import User from './entity/User'
 import Message from './entity/Message'
 import Guild from './entity/Guild'
@@ -8,6 +8,7 @@ const typeDefs = gql`
 type User {
   _id: ID! @unique @relation(name: "UserId")
   username: String! @unique
+  createdAt: String!
   messages: [Message] @relation(name: "UserMessages")
   createdGuilds: [Guild] @relation(name: "CreatedUserGuilds")
   guilds: [Guild] @relation(name: "UserGuilds")
@@ -40,6 +41,8 @@ type Query {
   users: [User!]!
   guilds: [Guild!]!
   messages: [Message!]!
+  userById(_id: ID!): User!
+  userByUsername(username: String!): User!
 }
 
 type Mutation {
@@ -50,23 +53,38 @@ type Mutation {
 `
 
 // Provide resolver functions for your schema fields
-const resolvers = {
+const resolvers: IResolvers = {
   Query: {
-    users: async (root, args) => {
+    /**
+   * @param root (also sometimes called parent): Remember how we said all a GraphQL server needs to do to resolve a query is calling the resolvers of the query’s fields? Well, it’s doing so breadth-first (level-by-level) and the root argument in each resolver call is simply the result of the previous call (initial value is null if not otherwise specified)
+   * @param args This argument carries the parameters for the query, in this case the id of the User to be fetched.
+   * @param context An object that gets passed through the resolver chain that each resolver can write to and read from (basically a means for resolvers to communicate and share information).
+   * @param info An AST representation of the query or mutation. You can read more about the details in part III of this series: Demystifying the info Argument in GraphQL Resolvers.
+   */
+    userById: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
-      return await userModel.find(args)
+      return await userModel.findOne(args)
     },
-    messages: async (root, args) => {
+    userByUsername: async (root, args, context, info) => {
+      const userModel = new User().getModelForClass(User)
+      return await userModel.findOne(args)
+    },
+    users: async (root, args, context, info) => {
+      const userModel = new User().getModelForClass(User)
+      const messageModel = new Message().getModelForClass(Message)
+      return await userModel.find().populate([{ path: 'messages', model: messageModel, select: [args] }])
+    },
+    messages: async (root, args, context, infos) => {
       const messageModel = new Message().getModelForClass(Message)
       return await messageModel.find(args)
     },
-    guilds: async (root, args) => {
+    guilds: async (root, args, context, info) => {
       const guildModel = new Guild().getModelForClass(Guild)
       return await guildModel.find(args)
     },
   },
   Mutation: {
-    createUser: async (root, args) => {
+    createUser: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
       const user = new userModel({
         username: args.username,
@@ -75,7 +93,7 @@ const resolvers = {
       await user.save()
       return await userModel.findOne(args)
     },
-    createMessage: async (root, args) => {
+    createMessage: async (root, args, context, infos) => {
       const userModel = new User().getModelForClass(User)
       const user = await userModel.findOne({ _id: args.sentBy })
       if (user) {
@@ -86,11 +104,11 @@ const resolvers = {
           createdAt: new Date().toUTCString(),
         })
         await message.save()
-        await userModel.update({ _id: args.createdBy }, { $push: { messages: message._id } })
+        await userModel.update({ _id: args.createdBy }, { $push: { messages: message } })
         return await messageModel.findOne(args)
       }
     },
-    createGuild: async (root, args) => {
+    createGuild: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
       const user = await userModel.findOne({ _id: args.createdBy })
       if (user) {
@@ -101,7 +119,7 @@ const resolvers = {
           createdAt: new Date().toUTCString(),
         })
         await guild.save()
-        await userModel.update({ _id: args.createdBy }, { $push: { createdGuilds: guild._id } })
+        await userModel.update({ _id: args.createdBy }, { $push: { createdGuilds: guild } })
         return await guildModel.findOne(args)
       }
     },
