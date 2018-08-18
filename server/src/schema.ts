@@ -51,9 +51,9 @@ type Query {
 
 type Mutation {
   createUser(username: String!): User!
-  createMessage(createdBy: ID!, content: String!): Message!
+  createMessage(createdBy: ID!, content: String!, channelId: ID!): Message!
   createGuild(createdBy: ID!, name:String!): Guild!
-  createChannel(createdBy: ID!, name:String!): Guild!
+  createChannel(createdBy: ID!, name:String!, guildId: ID!): Guild!
 }
 `
 
@@ -134,6 +134,7 @@ const resolvers: IResolvers = {
       const user = await userModel.findOne({ _id: args.createdBy })
       if (user) {
         const messageModel = new Message().getModelForClass(Message)
+        const channelModel = new Channel().getModelForClass(Channel)
         const message = new messageModel({
           content: args.content,
           createdBy: args.createdBy,
@@ -141,6 +142,7 @@ const resolvers: IResolvers = {
         })
         await message.save()
         await userModel.update({ _id: args.createdBy }, { $push: { messages: message } })
+        await channelModel.update({ _id: args.channelId }, { $push: { messages: message } })
         return await messageModel.findOne(args)
       }
     },
@@ -171,7 +173,7 @@ const resolvers: IResolvers = {
           createdAt: new Date().toUTCString(),
         })
         await channel.save()
-        await guildModel.update({ _id: args.createdBy }, { $push: { channels: channel } })
+        await guildModel.update({ _id: args.guildId }, { $push: { channels: channel } })
         return await channelModel.findOne(args)
       }
     },
