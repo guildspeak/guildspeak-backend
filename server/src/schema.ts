@@ -2,6 +2,7 @@ import { gql, IResolvers } from 'apollo-server-express'
 import User from './entity/User'
 import Message from './entity/Message'
 import Guild from './entity/Guild'
+import Channel from './entity/Channel'
 
 // Construct a schema, using GraphQL schema language
 const typeDefs = gql`
@@ -34,7 +35,8 @@ type Guild {
 type Channel {
   _id: ID! @unique @relation(name: "ChannelId")
   name: String!
-  users: [User!]! @relation(name: "UserId")
+  createdAt: String!
+  users: [User] @relation(name: "UserId")
 }
 
 type Query {
@@ -48,7 +50,8 @@ type Query {
 type Mutation {
   createUser(username: String!): User!
   createMessage(sentBy: ID!, content: String!): Message!
-  createGuild(createdBy: ID!, name:String!, ): Guild!
+  createGuild(createdBy: ID!, name:String!): Guild!
+  createChannel(createdBy: ID!, name:String!): Guild!
 }
 `
 
@@ -97,7 +100,10 @@ const resolvers: IResolvers = {
     },
     guilds: async (root, args, context, info) => {
       const guildModel = new Guild().getModelForClass(Guild)
-      return await guildModel.find(args)
+      const channelModel = new Channel().getModelForClass(Channel)
+      return await guildModel.find().populate([
+        { path: 'channels', model: channelModel, select: [args] },
+      ])
     },
   },
   Mutation: {
@@ -138,6 +144,22 @@ const resolvers: IResolvers = {
         await guild.save()
         await userModel.update({ _id: args.createdBy }, { $push: { createdGuilds: guild, guilds: guild } })
         return await guildModel.findOne(args)
+      }
+    },
+    createChannel: async (root, args, context, info) => {
+      const userModel = new User().getModelForClass(User)
+      const user = await userModel.findOne({ _id: args.createdBy })
+      if (user) {
+        const guildModel = new Guild().getModelForClass(Guild)
+        const channelModel = new Channel().getModelForClass(Channel)
+        const channel = new channelModel({
+          name: args.name,
+          createdBy: args.createdBy,
+          createdAt: new Date().toUTCString(),
+        })
+        await channel.save()
+        await guildModel.update({ _id: args.createdBy }, { $push: { channels: channel } })
+        return await channelModel.findOne(args)
       }
     },
   },
