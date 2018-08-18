@@ -13,10 +13,10 @@ export default class Guild extends Typegoose {
   @prop({ required: true })
   createdAt: string
 
-  @arrayProp({ itemsRef: User, required: true })
+  @arrayProp({ itemsRef: 'User' })
   users: Ref<User>[]
 
-  @arrayProp({ itemsRef: Channel, required: true })
+  @arrayProp({ itemsRef: 'Channel' })
   channels: Ref<Channel>[]
 
 }

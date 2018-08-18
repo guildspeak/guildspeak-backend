@@ -12,6 +12,6 @@ export default class Message extends Typegoose {
   content: string
 
   @prop({ ref: User, required: true })
-  sentBy: Ref<User>
+  createdBy: Ref<User>
 
 }

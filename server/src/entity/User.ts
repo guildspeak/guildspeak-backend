@@ -1,11 +1,12 @@
 import { prop, arrayProp, Typegoose, Ref } from 'typegoose'
 import Message from './Message'
+import Guild from './Guild'
 
-enum Gender {
-  OTHER = 'other',
-  MALE = 'male',
-  FEMALE = 'female',
-}
+// enum Gender {
+//   OTHER = 'other',
+//   MALE = 'male',
+//   FEMALE = 'female',
+// }
 
 export default class User extends Typegoose {
   @prop({ unique: true, required: true })
@@ -22,6 +23,12 @@ export default class User extends Typegoose {
 
   @arrayProp({ itemsRef: Message })
   messages: Ref<Message>[]
+
+  @arrayProp({ itemsRef: Guild })
+  guilds: Ref<Guild>[]
+
+  @arrayProp({ itemsRef: Guild })
+  createdGuilds: Ref<Guild>[]
 
   // @prop()
   // avatar?: string

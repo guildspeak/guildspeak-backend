@@ -16,15 +16,15 @@ type User {
 }
 
 type Message {
-  _id: ID! @unique
+  _id: ID! @unique @relation(name: "UserMessages")
   createdAt: String!
   updatedAt: String
   content: String!
-  sentBy: ID! @relation(name: "UserMessages")
+  createdBy: ID!
 }
 
 type Guild {
-  _id: ID! @unique
+  _id: ID! @unique @relation(name: "CreatedUserGuilds") @relation(name: "UserGuilds")
   name: String!
   createdAt: String!
   createdBy: ID! @relation(name: "UserId")
@@ -37,11 +37,13 @@ type Channel {
   name: String!
   createdAt: String!
   users: [User] @relation(name: "UserId")
+  messages: [Message] @relation(name: "UserMessages")
 }
 
 type Query {
   users: [User!]!
   guilds: [Guild!]!
+  guildById(_id: ID!): Guild!
   messages: [Message!]!
   userById(_id: ID!): User!
   userByUsername(username: String!): User!
@@ -49,7 +51,7 @@ type Query {
 
 type Mutation {
   createUser(username: String!): User!
-  createMessage(sentBy: ID!, content: String!): Message!
+  createMessage(createdBy: ID!, content: String!): Message!
   createGuild(createdBy: ID!, name:String!): Guild!
   createChannel(createdBy: ID!, name:String!): Guild!
 }
@@ -68,31 +70,33 @@ const resolvers: IResolvers = {
       const userModel = new User().getModelForClass(User)
       const messageModel = new Message().getModelForClass(Message)
       const guildModel = new Guild().getModelForClass(Guild)
-      return await userModel.find().populate([
-        { path: 'messages', model: messageModel, select: [args] },
-        { path: 'createdGuilds', model: guildModel, select: [args] },
-        { path: 'guilds', model: guildModel, select: [args] },
+      return await userModel.findOne(args).populate([
+        { path: 'messages', model: messageModel },
+        { path: 'createdGuilds', model: guildModel },
+        { path: 'guilds', model: guildModel },
       ])
     },
     userByUsername: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
       const messageModel = new Message().getModelForClass(Message)
       const guildModel = new Guild().getModelForClass(Guild)
-      return await userModel.find().populate([
-        { path: 'messages', model: messageModel, select: [args] },
-        { path: 'createdGuilds', model: guildModel, select: [args] },
-        { path: 'guilds', model: guildModel, select: [args] },
+      return await userModel.findOne(args).populate([
+        { path: 'messages', model: messageModel },
+        { path: 'createdGuilds', model: guildModel },
+        { path: 'guilds', model: guildModel },
       ])
     },
     users: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
       const messageModel = new Message().getModelForClass(Message)
       const guildModel = new Guild().getModelForClass(Guild)
-      return await userModel.find().populate([
-        { path: 'messages', model: messageModel, select: [args] },
-        { path: 'createdGuilds', model: guildModel, select: [args] },
-        { path: 'guilds', model: guildModel, select: [args] },
+
+      const data = await userModel.find(args).populate([
+        { path: 'messages', model: messageModel },
+        { path: 'createdGuilds', model: guildModel },
+        { path: 'guilds', model: guildModel },
       ])
+      return data
     },
     messages: async (root, args, context, infos) => {
       const messageModel = new Message().getModelForClass(Message)
@@ -101,8 +105,17 @@ const resolvers: IResolvers = {
     guilds: async (root, args, context, info) => {
       const guildModel = new Guild().getModelForClass(Guild)
       const channelModel = new Channel().getModelForClass(Channel)
+      const userModel = new User().getModelForClass(User)
       return await guildModel.find().populate([
-        { path: 'channels', model: channelModel, select: [args] },
+        { path: 'channels', model: channelModel },
+        { path: 'users', model: userModel },
+      ])
+    },
+    guildById: async (root, args, context, info) => {
+      const guildModel = new Guild().getModelForClass(Guild)
+      const channelModel = new Channel().getModelForClass(Channel)
+      return await guildModel.find(args).populate([
+        { path: 'channels', model: channelModel },
       ])
     },
   },
@@ -118,12 +131,12 @@ const resolvers: IResolvers = {
     },
     createMessage: async (root, args, context, infos) => {
       const userModel = new User().getModelForClass(User)
-      const user = await userModel.findOne({ _id: args.sentBy })
+      const user = await userModel.findOne({ _id: args.createdBy })
       if (user) {
         const messageModel = new Message().getModelForClass(Message)
         const message = new messageModel({
           content: args.content,
-          sentBy: args.sentBy,
+          createdBy: args.createdBy,
           createdAt: new Date().toUTCString(),
         })
         await message.save()
