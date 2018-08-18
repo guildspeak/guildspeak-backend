@@ -63,16 +63,33 @@ const resolvers: IResolvers = {
    */
     userById: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
-      return await userModel.findOne(args)
+      const messageModel = new Message().getModelForClass(Message)
+      const guildModel = new Guild().getModelForClass(Guild)
+      return await userModel.find().populate([
+        { path: 'messages', model: messageModel, select: [args] },
+        { path: 'createdGuilds', model: guildModel, select: [args] },
+        { path: 'guilds', model: guildModel, select: [args] },
+      ])
     },
     userByUsername: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
-      return await userModel.findOne(args)
+      const messageModel = new Message().getModelForClass(Message)
+      const guildModel = new Guild().getModelForClass(Guild)
+      return await userModel.find().populate([
+        { path: 'messages', model: messageModel, select: [args] },
+        { path: 'createdGuilds', model: guildModel, select: [args] },
+        { path: 'guilds', model: guildModel, select: [args] },
+      ])
     },
     users: async (root, args, context, info) => {
       const userModel = new User().getModelForClass(User)
       const messageModel = new Message().getModelForClass(Message)
-      return await userModel.find().populate([{ path: 'messages', model: messageModel, select: [args] }])
+      const guildModel = new Guild().getModelForClass(Guild)
+      return await userModel.find().populate([
+        { path: 'messages', model: messageModel, select: [args] },
+        { path: 'createdGuilds', model: guildModel, select: [args] },
+        { path: 'guilds', model: guildModel, select: [args] },
+      ])
     },
     messages: async (root, args, context, infos) => {
       const messageModel = new Message().getModelForClass(Message)
@@ -119,7 +136,7 @@ const resolvers: IResolvers = {
           createdAt: new Date().toUTCString(),
         })
         await guild.save()
-        await userModel.update({ _id: args.createdBy }, { $push: { createdGuilds: guild } })
+        await userModel.update({ _id: args.createdBy }, { $push: { createdGuilds: guild, guilds: guild } })
         return await guildModel.findOne(args)
       }
     },
