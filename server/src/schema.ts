@@ -108,7 +108,7 @@ const resolvers: IResolvers = {
       const guildModel = new Guild().getModelForClass(Guild)
       const channelModel = new Channel().getModelForClass(Channel)
       const userModel = new User().getModelForClass(User)
-      return await guildModel.find().populate([
+      return await guildModel.find(args).populate([
         { path: 'channels', model: channelModel },
         { path: 'users', model: userModel },
       ])
@@ -116,7 +116,7 @@ const resolvers: IResolvers = {
     guildById: async (root, args, context, info) => {
       const guildModel = new Guild().getModelForClass(Guild)
       const channelModel = new Channel().getModelForClass(Channel)
-      return await guildModel.find(args).populate([
+      return await guildModel.findById(args._id).populate([
         { path: 'channels', model: channelModel },
       ])
     },
