@@ -27,8 +27,8 @@ export default class User extends Typegoose {
   @arrayProp({ itemsRef: Guild })
   guilds: Ref<Guild>[]
 
-  @arrayProp({ itemsRef: Guild })
-  createdGuilds: Ref<Guild>[]
+  // @arrayProp({ itemsRef: Guild })
+  // createdGuilds: Ref<Guild>[]
 
   // @prop()
   // avatar?: string
