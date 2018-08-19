@@ -10,6 +10,7 @@ type User {
   _id: ID! @unique @relation(name: "UserId")
   username: String! @unique
   createdAt: String!
+  updatedAt: String
   messages: [Message] @relation(name: "UserMessages")
   guilds: [Guild] @relation(name: "UserGuilds")
 }
@@ -18,14 +19,16 @@ type Message {
   _id: ID! @unique @relation(name: "UserMessages")
   createdAt: String!
   updatedAt: String
+  channelId: ID! @relation(name: "ChannelId")
   content: String!
-  createdBy: ID!
+  createdBy: ID! @relation(name: "UserId")
 }
 
 type Guild {
   _id: ID! @unique @relation(name: "UserGuilds")
   name: String!
   createdAt: String!
+  updatedAt: String
   createdBy: ID! @relation(name: "UserId")
   users: [User!]! @relation(name: "UserId")
   channels: [Channel!]! @relation(name: "ChannelId")
@@ -35,6 +38,7 @@ type Channel {
   _id: ID! @unique @relation(name: "ChannelId")
   name: String!
   createdAt: String!
+  updatedAt: String
   createdBy: ID! @relation(name: "UserId")
   guildId: ID! @unique @relation(name: "UserGuilds")
   users: [User] @relation(name: "UserId")
@@ -137,6 +141,7 @@ const resolvers: IResolvers = {
           content: args.content,
           createdBy: args.createdBy,
           createdAt: new Date().toUTCString(),
+          channelId: args.channelId,
         })
         await message.save()
         await userModel.update({ _id: args.createdBy }, { $push: { messages: message } })

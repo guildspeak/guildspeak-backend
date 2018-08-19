@@ -1,5 +1,6 @@
 import { prop, Typegoose, Ref } from 'typegoose'
 import User from './User'
+import Channel from './Channel'
 
 export default class Message extends Typegoose {
   @prop({ required: true })
@@ -13,5 +14,8 @@ export default class Message extends Typegoose {
 
   @prop({ ref: User, required: true })
   createdBy: Ref<User>
+
+  @prop({ ref: 'Channel', required: true })
+  channelId: Ref<Channel>
 
 }
