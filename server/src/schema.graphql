@@ -1,6 +1,7 @@
 # import Guild from "./generated/prisma.graphql"
 # import Channel from "./generated/prisma.graphql"
 # import Message from "./generated/prisma.graphql"
+# import ChannelSubscriptionPayload from "./generated/prisma.graphql"
 
 type User {
   id: ID!

@@ -3,7 +3,7 @@ import { getUserId, Context } from '../../utils'
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
     const userId = getUserId(ctx)
-    return ctx.db.mutation.createMessage(
+    const result = await ctx.db.mutation.createMessage(
       {
         data: {
           content: content,
@@ -21,5 +21,14 @@ export default {
       },
       info,
     )
+    await ctx.db.mutation.updateChannel({
+      data: {
+        lastMessage: new Date(),
+      },
+      where: {
+        id: channelId,
+      },
+    })
+    return result
   },
 }

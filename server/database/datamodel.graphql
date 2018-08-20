@@ -35,6 +35,7 @@ type Channel {
   name: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  lastMessage: DateTime
   author: User! @relation(name: "UserChannels")
   guildId: Guild!
   messages: [Message!]!
