@@ -1,6 +1,5 @@
 import { getUserId, Context } from '../utils'
 
-// tslint:disable-next-line:variable-name
 export default {
   guilds(parent, args, ctx: Context, info) {
     return ctx.db.query.guilds({}, info)
