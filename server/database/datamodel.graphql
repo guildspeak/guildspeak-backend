@@ -1,0 +1,41 @@
+type User {
+  id: ID! @unique
+  username: String! @unique
+  password: String!
+  email: String! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  messages: [Message!]! @relation(name: "UserMessages")
+  createdGuilds: [Guild!]! @relation(name: "UserCreatedGuilds")
+  guilds: [Guild!]! @relation(name: "UserGuilds")
+  channels: [Channel!]! @relation(name: "UserChannels")
+}
+
+type Message {
+  id: ID! @unique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  channelId: Channel!
+  content: String!
+  author: User! @relation(name: "UserMessages")
+}
+
+type Guild {
+  id: ID! @unique
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: User! @relation(name: "UserCreatedGuilds")
+  users: [User!]! @relation(name: "UserGuilds")
+  channels: [Channel!]!
+}
+
+type Channel {
+  id: ID! @unique
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: User! @relation(name: "UserChannels")
+  guildId: Guild!
+  messages: [Message!]!
+}

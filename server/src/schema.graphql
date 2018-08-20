@@ -1,0 +1,41 @@
+# import Guild from "./generated/prisma.graphql"
+# import Channel from "./generated/prisma.graphql"
+# import Message from "./generated/prisma.graphql"
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  messages: [Message!]!
+  createdGuilds: [Guild!]!
+  guilds: [Guild!]!
+  channels: [Channel!]!
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User!
+  guilds: [Guild!]!
+  guild(id: ID!): Guild!
+  me: User
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Mutation {
+  signup(email: String!, password: String!, username: String!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  createMessage(content: String!, channelId: ID!): Message!
+  createGuild(name: String!): Guild!
+  joinToGuild(guildId: ID!): Guild!
+  createChannel(name: String!, guildId: ID!): Channel!
+}
+
+type Subscription {
+  channelSubscription(channelId: ID!): ChannelSubscriptionPayload!
+}
