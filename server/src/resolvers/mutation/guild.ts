@@ -17,7 +17,7 @@ export default {
     )
   },
 
-  async joinToGuild(parent, { guildId }, ctx: Context, info) {
+  async joinGuild(parent, { guildId }, ctx: Context, info) {
     const userId = getUserId(ctx)
     return ctx.db.mutation.updateGuild(
       {

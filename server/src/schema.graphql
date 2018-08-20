@@ -32,7 +32,7 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload!
   createMessage(content: String!, channelId: ID!): Message!
   createGuild(name: String!): Guild!
-  joinToGuild(guildId: ID!): Guild!
+  joinGuild(guildId: ID!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
 }
 
