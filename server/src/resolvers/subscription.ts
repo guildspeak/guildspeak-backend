@@ -7,6 +7,9 @@ export default {
         {
           where: {
             mutation_in: ['DELETED', 'UPDATED'],
+            node: {
+              id: channelId,
+            },
           },
         },
         info,
