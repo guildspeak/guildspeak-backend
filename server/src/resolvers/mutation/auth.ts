@@ -3,7 +3,7 @@ import * as jwt from 'jsonwebtoken'
 import { Context } from '../../utils'
 
 export default {
-  async signup(parent, args, ctx: Context, info) {
+  async register(parent, args, ctx: Context, info) {
     const password = await bcrypt.hash(args.password, 10)
     const user = await ctx.db.mutation.createUser({
       data: { ...args, password },
