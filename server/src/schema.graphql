@@ -38,5 +38,5 @@ type Mutation {
 }
 
 type Subscription {
-  channelSubscription(channelId: ID!): ChannelSubscriptionPayload!
+  channelSubscription(channelId: ID!): ChannelSubscriptionPayload
 }
