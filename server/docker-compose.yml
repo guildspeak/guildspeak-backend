@@ -5,8 +5,6 @@ services:
     restart: always
     depends_on:
     - "postgres"
-    ports:
-    - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -28,5 +26,15 @@ services:
       POSTGRES_PASSWORD: prisma
     volumes:
       - postgres:/var/lib/postgresql/data
+  guildspeak:
+    build: .
+    restart: always
+    ports:
+    - "4000:4000"
+    environment:
+      PRISMA_ENDPOINT: http://prisma:4466
+    env_file: ./.env
+    depends_on:
+    - "prisma"
 volumes:
-postgres:
+  postgres:
