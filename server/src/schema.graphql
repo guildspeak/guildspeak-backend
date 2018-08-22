@@ -18,6 +18,7 @@ type User {
 type Query {
   users: [User!]!
   user(id: ID!): User!
+  channel(id: ID!): Channel!
   guilds: [Guild!]!
   guild(id: ID!): Guild!
   me: User
