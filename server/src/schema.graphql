@@ -30,7 +30,7 @@ type AuthPayload {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, username: String!): AuthPayload!
+  register(email: String!, password: String!, username: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   createMessage(content: String!, channelId: ID!): Message!
   createGuild(name: String!): Guild!
