@@ -2,7 +2,8 @@ import { getUserId, Context } from '../utils'
 
 export default {
   guilds(parent, args, ctx: Context, info) {
-    return ctx.db.query.guilds({}, info)
+    const id = getUserId(ctx)
+    return ctx.db.query.guilds({ where: { users_some: { id } } }, info)
   },
 
   guild(parent, { id }, ctx: Context, info) {
