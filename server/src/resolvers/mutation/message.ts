@@ -3,8 +3,17 @@ import { getUserId, Context } from '../../utils'
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
     const userId = getUserId(ctx)
-    const channel = await ctx.db.query.channel({ where: { id: channelId } })
-    if (!channel.guildId.users.find(user => user.id === userId)) throw new Error('User not in guild')
+    const guild = await ctx.db.query.guilds(
+      { where: { channels_some: { id: channelId } } },
+      `
+      {
+        users {
+          id
+        }
+      }
+      `,
+    )
+    if (!guild[0].users.find(user => user.id === userId)) throw new Error('User not in guild')
     const result = await ctx.db.mutation.createMessage(
       {
         data: {
