@@ -33,6 +33,7 @@ type Mutation {
   register(email: String!, password: String!, username: String!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   createMessage(content: String!, channelId: ID!): Message!
+  deleteMessage(messageId: ID!, user: User!)
   createGuild(name: String!): Guild!
   joinGuild(guildId: ID!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
