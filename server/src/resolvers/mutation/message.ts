@@ -42,4 +42,24 @@ export default {
     })
     return result
   },
+  async deleteMessage(parent, {messageId}, ctx: Context, info){
+    const userId = getUserId(ctx)
+    const message = await ctx.db.query.message({
+      where: {
+        id: messageId
+      }
+    }, 
+    `{
+       author {
+         id
+       }
+     }`)
+     if(!(message.author.id === userId)) throw new Error(`You aren't owner of this message`)
+     await ctx.db.mutation.deleteMessage({
+       where: {
+         id: messageId
+       }
+     })
+     return message
+  }
 }
