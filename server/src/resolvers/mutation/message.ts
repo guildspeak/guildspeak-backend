@@ -1,4 +1,5 @@
 import { getUserId, Context } from '../../utils'
+import { Message } from '../../generated/prisma';
 
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
@@ -42,9 +43,9 @@ export default {
     })
     return result
   },
-  async deleteMessage(parent, {messageId}, ctx: Context, info){
+  async deleteMessage(parent, {messageId}, ctx: Context, info) : Promise<Message> {
     const userId = getUserId(ctx)
-    const message = await ctx.db.query.message({
+    const message : Message = await ctx.db.query.message({
       where: {
         id: messageId
       }
@@ -55,11 +56,13 @@ export default {
        }
      }`)
      if(!(message.author.id === userId)) throw new Error(`You aren't owner of this message`)
-     await ctx.db.mutation.deleteMessage({
+     const result : Message = await ctx.db.mutation.deleteMessage({
        where: {
          id: messageId
        }
-     })
-     return message
+     }, 
+      info
+    )
+     return result
   }
 }
