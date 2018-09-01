@@ -1,4 +1,5 @@
 import { getUserId, Context } from '../../utils'
+import { Message } from '../../generated/prisma'
 
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
@@ -40,6 +41,31 @@ export default {
         id: channelId,
       },
     })
+    return result
+  },
+  async deleteMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
+    const userId = getUserId(ctx)
+    const message = await ctx.db.query.messages(
+      {
+        where: {
+          id: messageId,
+          author: {
+            id: userId,
+          },
+        },
+      },
+   )
+
+    if (!message.length) throw new Error(`You are not the author of this message`)
+
+    const result : Message = await ctx.db.mutation.deleteMessage(
+      {
+        where: {
+          id: messageId,
+        },
+      },
+      info,
+   )
     return result
   },
 }
