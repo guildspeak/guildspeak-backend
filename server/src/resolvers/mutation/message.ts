@@ -1,7 +1,8 @@
 import { getUserId, Context } from '../../utils'
 import { Message, User, ID_Input } from '../../generated/prisma'
 
-const isUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_Input) => {
+const modifyUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_Input,
+                                 callback: (ctx: Context, message: Message) => Message) => {
   const message = await ctx.db.query.messages(
     {
       where: {
@@ -12,6 +13,10 @@ const isUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_Input
       },
     },
  )
+  if (!message.length) throw new Error(`You are not the author of this message`)
+
+  callback(ctx, message[0])
+
 }
 
 export default {
@@ -57,10 +62,10 @@ export default {
     return result
   },
   async deleteMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
+
     const userId = getUserId(ctx)
 
-
-    if (!message.length) throw new Error(`You are not the author of this message`)
+    if (!isUserMessage(ctx, userId, messageId)) throw new Error(`You are not the author of this message`)
 
     const result : Message = await ctx.db.mutation.deleteMessage(
       {
@@ -74,6 +79,7 @@ export default {
   },
   async editMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
     const userId = getUserId(ctx)
-    const message = await ctx.db.query
+
+    if(isUserMessage(ctx, userId, messageId)) thro
   }
 }
