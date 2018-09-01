@@ -1,7 +1,7 @@
 import { getUserId, Context } from '../../utils'
 import { Message, User, ID_Input } from '../../generated/prisma'
 
-const getUserMessageById = async (ctx: Context, userId: ID_Input, messageId: ID_Input) => {
+const isUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_Input) => {
   const message = await ctx.db.query.messages(
     {
       where: {
