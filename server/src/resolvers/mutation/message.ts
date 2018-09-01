@@ -1,5 +1,18 @@
 import { getUserId, Context } from '../../utils'
-import { Message } from '../../generated/prisma'
+import { Message, User, ID_Input } from '../../generated/prisma'
+
+const getUserMessageById = async (ctx: Context, userId: ID_Input, messageId: ID_Input) => {
+  const message = await ctx.db.query.messages(
+    {
+      where: {
+        id: messageId,
+        author: {
+          id: userId,
+        },
+      },
+    },
+ )
+}
 
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
@@ -45,16 +58,7 @@ export default {
   },
   async deleteMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
     const userId = getUserId(ctx)
-    const message = await ctx.db.query.messages(
-      {
-        where: {
-          id: messageId,
-          author: {
-            id: userId,
-          },
-        },
-      },
-   )
+
 
     if (!message.length) throw new Error(`You are not the author of this message`)
 
@@ -68,4 +72,8 @@ export default {
    )
     return result
   },
+  async editMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
+    const userId = getUserId(ctx)
+    const message = await ctx.db.query
+  }
 }
