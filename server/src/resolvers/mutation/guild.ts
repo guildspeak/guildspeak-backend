@@ -1,12 +1,17 @@
 import { getUserId, Context } from '../../utils'
 export default {
-  async createGuild(parent, { name, guildId }, ctx: Context, info) {
+  async createGuild(parent, { name }, ctx: Context, info) {
     const userId = getUserId(ctx)
     return ctx.db.mutation.createGuild(
       {
         data: {
           name: name,
           author: {
+            connect: {
+              id: userId,
+            },
+          },
+          users: {
             connect: {
               id: userId,
             },
