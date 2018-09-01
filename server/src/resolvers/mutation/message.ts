@@ -76,5 +76,23 @@ export default {
      )
     })
     return result
-  }
+  },
+  async editMessage(parent, { messageId, newContent }, ctx: Context, info) : Promise<Message> {
+    const userId = getUserId(ctx)
+
+    const result : Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message) : Promise<Message> => {
+      return await ctx.db.mutation.updateMessage(
+        {
+          data: {
+            content: newContent,
+          },
+          where: {
+            id: messageId,
+          },
+        },
+      )
+    })
+
+    return result
+  },
 }
