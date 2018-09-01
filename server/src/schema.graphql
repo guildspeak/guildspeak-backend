@@ -34,6 +34,7 @@ type Mutation {
   login(email: String!, password: String!): AuthPayload!
   createMessage(content: String!, channelId: ID!): Message!
   deleteMessage(messageId: ID!): Message!
+  editMessage(messageId: ID!): Message!
   createGuild(name: String!): Guild!
   joinGuild(guildId: ID!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
