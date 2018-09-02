@@ -1,5 +1,23 @@
 import { getUserId, Context } from '../../utils'
-import { Message } from '../../generated/prisma'
+import { Message, User, ID_Input } from '../../generated/prisma'
+
+const modifyUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_Input,
+                                 callback: (ctx: Context, message: Message) => Promise<Message>) : Promise<Message> => {
+  const message = await ctx.db.query.messages(
+    {
+      where: {
+        id: messageId,
+        author: {
+          id: userId,
+        },
+      },
+    },
+ )
+  if (!message.length) throw new Error(`You are not the author of this message`)
+
+  return await callback(ctx, message[0])
+
+}
 
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
@@ -44,28 +62,37 @@ export default {
     return result
   },
   async deleteMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
+
     const userId = getUserId(ctx)
-    const message = await ctx.db.query.messages(
-      {
-        where: {
-          id: messageId,
-          author: {
-            id: userId,
+
+    const result : Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message) : Promise<Message> => {
+      return await ctx.db.mutation.deleteMessage(
+        {
+          where: {
+            id: messageId,
           },
         },
-      },
-   )
+        info,
+     )
+    })
+    return result
+  },
+  async editMessage(parent, { messageId, newContent }, ctx: Context, info) : Promise<Message> {
+    const userId = getUserId(ctx)
 
-    if (!message.length) throw new Error(`You are not the author of this message`)
-
-    const result : Message = await ctx.db.mutation.deleteMessage(
-      {
-        where: {
-          id: messageId,
+    const result : Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message) : Promise<Message> => {
+      return await ctx.db.mutation.updateMessage(
+        {
+          data: {
+            content: newContent,
+          },
+          where: {
+            id: messageId,
+          },
         },
-      },
-      info,
-   )
+      )
+    })
+
     return result
   },
 }
