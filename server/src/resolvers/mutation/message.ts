@@ -1,8 +1,11 @@
 import { getUserId, Context } from '../../utils'
-import { Message, User, ID_Input } from '../../generated/prisma'
+import { Message, ID_Input } from '../../generated/prisma'
 
-const modifyUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_Input,
-                                 callback: (ctx: Context, message: Message) => Promise<Message>) : Promise<Message> => {
+const modifyUserMessage = async (
+  ctx: Context,
+  userId: ID_Input,
+  messageId: ID_Input,
+  callback: (ctx: Context, message: Message) => Promise<Message>): Promise<Message> => {
   const message = await ctx.db.query.messages(
     {
       where: {
@@ -12,8 +15,8 @@ const modifyUserMessage = async (ctx: Context, userId: ID_Input, messageId: ID_I
         },
       },
     },
- )
-  if (!message.length) throw new Error(`You are not the author of this message`)
+  )
+  if (!message.length) throw new Error('You are not the author of this message')
 
   return await callback(ctx, message[0])
 
@@ -61,11 +64,11 @@ export default {
     })
     return result
   },
-  async deleteMessage(parent, { messageId }, ctx: Context, info) : Promise<Message> {
+  async deleteMessage(parent, { messageId }, ctx: Context, info): Promise<Message> {
 
     const userId = getUserId(ctx)
 
-    const result : Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message) : Promise<Message> => {
+    const result: Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message): Promise<Message> => {
       return await ctx.db.mutation.deleteMessage(
         {
           where: {
@@ -73,14 +76,14 @@ export default {
           },
         },
         info,
-     )
+      )
     })
     return result
   },
-  async editMessage(parent, { messageId, newContent }, ctx: Context, info) : Promise<Message> {
+  async editMessage(parent, { messageId, newContent }, ctx: Context, info): Promise<Message> {
     const userId = getUserId(ctx)
 
-    const result : Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message) : Promise<Message> => {
+    const result: Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message): Promise<Message> => {
       return await ctx.db.mutation.updateMessage(
         {
           data: {

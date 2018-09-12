@@ -1,5 +1,4 @@
 import { getUserId, Context } from '../../utils'
-import { forwardTo } from 'prisma-binding'
 
 export default {
   async createChannel(parent, { name, guildId }, ctx: Context, info) {

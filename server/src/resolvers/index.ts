@@ -5,8 +5,7 @@ import message from './mutation/message'
 import guild from './mutation/guild'
 import channel from './mutation/channel'
 import subscription from './subscription'
-import { Context } from '../utils'
-import { forwardTo } from 'prisma-binding'
+
 export default {
   Query: query,
   Mutation: {

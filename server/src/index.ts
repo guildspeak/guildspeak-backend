@@ -5,7 +5,7 @@ import resolvers from './resolvers'
 const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers: resolvers,
-  resolverValidationOptions :{
+  resolverValidationOptions: {
     requireResolversForResolveType: false,
   },
   context: req => ({

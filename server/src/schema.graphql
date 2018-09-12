@@ -2,6 +2,7 @@
 # import Channel from "./generated/prisma.graphql"
 # import Message from "./generated/prisma.graphql"
 # import ChannelSubscriptionPayload from "./generated/prisma.graphql"
+# import GuildSubscriptionPayload from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -42,4 +43,6 @@ type Mutation {
 
 type Subscription {
   channelSubscription(channelId: ID!): ChannelSubscriptionPayload
+  guildSubscription(guildId: ID!): GuildSubscriptionPayload
+  guildsSubscription: GuildSubscriptionPayload
 }
