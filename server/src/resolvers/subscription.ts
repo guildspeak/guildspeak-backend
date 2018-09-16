@@ -6,7 +6,7 @@ export default {
       return ctx.db.subscription.channel(
         {
           where: {
-            mutation_in: ['DELETED', 'UPDATED'],
+            mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
             node: {
               id: channelId,
             },
@@ -21,7 +21,7 @@ export default {
       return ctx.db.subscription.guild(
         {
           where: {
-            mutation_in: ['DELETED', 'UPDATED'],
+            mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
             node: {
               id: guildId,
             },
@@ -36,7 +36,7 @@ export default {
       return ctx.db.subscription.guild(
         {
           where: {
-            mutation_in: ['DELETED', 'UPDATED'],
+            mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
           },
         },
         info,
