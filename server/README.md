@@ -1,25 +1,17 @@
-# Guildspeak Backend
+<h1 style="text-align:center">
+<img src="https://cdn.rawgit.com/guildspeak/branding/cdn/SVG/icon-backend.svg" width="50%" alt="Guildspeak Backend">
+    
+[![GitHub](https://img.shields.io/github/license/guildspeak/guildspeak-backend.svg?style=for-the-badge)](https://github.com/guildspeak/guildspeak-backend)
+[![GitHub issues](https://img.shields.io/github/issues/guildspeak/guildspeak-backend.svg?style=for-the-badge)](https://github.com/guildspeak/guildspeak-backend)
+![LOVE](https://img.shields.io/badge/Built%20with-%E2%9D%A4%20LOVE-red.svg?longCache=true&style=for-the-badge)
+</h1>
 
 
-[![Open Source Love svg2](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)](https://github.com/ellerbrock/open-source-badges/)
-[![GitHub issues](https://img.shields.io/github/issues/guildspeak/guildspeak-backend.svg)](https://github.com/guildspeak/guildspeak-backend/issues)
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
-
-
-
-## Preparation
+### Preparations
 
 - Install [Docker](https://www.docker.com/get-started)
-- Create `.env` file ([example](./.env.example) in repo)
-
-## Production
-
-- Start Docker containers using the docker-compose CLI
-```bash
-docker-compose up -d
-```
-
-## Development
+- Create `.env` file ([example file](./.env.example) in repository)
+### Development
 
 - Start Prisma + Postgres from the database directory
 ```bash
@@ -37,23 +29,28 @@ npm run prisma deploy
 * `npm run dev` starts GraphQL server on `http://localhost:4000` _and_ opens GraphQL Playground
 * `npm run playground` opens the GraphQL Playground for the `projects` from [`.graphqlconfig.yml`](./.graphqlconfig.yml)
 * `npm run prisma <subcommand>` gives access to local version of Prisma CLI (e.g. `npm run prisma deploy`)
+### Running backend in production mode
+
+- Start Docker containers using the docker-compose CLI
+```bash
+docker-compose up -d
+```
 
 ## FAQ
--  How to update production container after making changes?  
+#### How to update production container after making changes? 
 ```bash
-docker-compose down
-docker-compose build
-docker-compose up
+    $ docker-compose down
+    $ docker-compose build
+    $ docker-compose up
 ```
--  How to clean current database?
-
-
-**Production:**
+#### How to clean current database?
+**Production**
 ```bash
-docker-compose run guildspeak npm run prisma reset
+    $ docker-compose run guildspeak npm run prisma reset
 ```
-**Development:**
-```bash
-npm run prisma reset
+**Development**
+ ```bash
+     $ npm run prisma reset
 ```
--  Where are the Prisma docs? [here](https://www.prisma.io/docs)
+#### Where are the Prisma docs? 
+[here](https://www.prisma.io/docs)
