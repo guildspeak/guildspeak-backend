@@ -1,10 +1,13 @@
-<h1 style="text-align:center">
-<img src="https://cdn.rawgit.com/guildspeak/branding/cdn/SVG/icon-backend.svg" width="50%" alt="Guildspeak Backend">
-    
-[![GitHub](https://img.shields.io/github/license/guildspeak/guildspeak-backend.svg?style=for-the-badge)](https://github.com/guildspeak/guildspeak-backend)
-[![GitHub issues](https://img.shields.io/github/issues/guildspeak/guildspeak-backend.svg?style=for-the-badge)](https://github.com/guildspeak/guildspeak-backend)
-![LOVE](https://img.shields.io/badge/Built%20with-%E2%9D%A4%20LOVE-red.svg?longCache=true&style=for-the-badge)
-</h1>
+<p align="center">
+  <h1 align="center">
+    <img src="https://cdn.rawgit.com/guildspeak/branding/cdn/SVG/icon-backend.svg" width="50%" alt="Guildspeak Backend">
+  </h1>
+  <p align="center">
+<img src="https://img.shields.io/github/license/guildspeak/guildspeak-backend.svg?style=for-the-badge" alt="GitHub"/>
+<a href="https://github.com/guildspeak/guildspeak-backend/issues"><img src="https://img.shields.io/github/issues/guildspeak/guildspeak-backend.svg?style=for-the-badge" alt="GitHub issues" /></a>
+<img src="https://img.shields.io/badge/Built%20with-%E2%9D%A4%20LOVE-red.svg?longCache=true&amp;style=for-the-badge" alt="LOVE" />
+  </p>
+</p>
 
 
 ### Preparations
