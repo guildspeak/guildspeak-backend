@@ -9,10 +9,12 @@
 
 
 ### Preparations
-
+- Install [Node.js](https://nodejs.org/en/download/)
 - Install [Docker](https://www.docker.com/get-started)
 - Create `.env` file ([example file](./.env.example) in repository)
-### Development
+- Install dependencies via `npm i`
+
+### Running backend in development mode
 
 - Start Prisma + Postgres from the database directory
 ```bash
@@ -25,33 +27,40 @@ docker-compose up -d
 npm run prisma deploy
 ```
 
-- Commands:
-* `npm run start` starts GraphQL server on `http://localhost:4000`
-* `npm run dev` starts GraphQL server on `http://localhost:4000` _and_ opens GraphQL Playground
-* `npm run playground` opens the GraphQL Playground for the `projects` from [`.graphqlconfig.yml`](./.graphqlconfig.yml)
-* `npm run prisma <subcommand>` gives access to local version of Prisma CLI (e.g. `npm run prisma deploy`)
+- Start GraphQl server
+```bash
+npm run start
+```
+
 ### Running backend in production mode
 
 - Start Docker containers using the docker-compose CLI
 ```bash
-docker-compose up -d
+docker-compose up
 ```
 
+## Commands:
+* `npm run start` starts GraphQL server on `http://localhost:4000`
+* `npm run dev` starts GraphQL server on `http://localhost:4000` _and_ opens GraphQL Playground
+* `npm run playground` opens the GraphQL Playground for the `projects` from [`.graphqlconfig.yml`](./.graphqlconfig.yml)
+* `npm run prisma <subcommand>` gives access to local version of Prisma CLI (e.g. `npm run prisma deploy`)
+
 ## FAQ
-#### How to update production container after making changes? 
+### How to update production container after making changes? 
 ```bash
-    $ docker-compose down
-    $ docker-compose build
-    $ docker-compose up
+docker-compose down
+docker-compose build
+docker-compose up
 ```
-#### How to clean current database?
+### How to clean current database?
 **Production**
 ```bash
-    $ docker-compose run guildspeak npm run prisma reset
+docker-compose run guildspeak 
+npm run prisma -- reset
 ```
 **Development**
  ```bash
-     $ npm run prisma reset
+npm run prisma -- reset
 ```
 #### Where are the Prisma docs? 
 [here](https://www.prisma.io/docs)
