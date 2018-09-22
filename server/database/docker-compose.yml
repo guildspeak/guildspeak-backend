@@ -6,7 +6,7 @@ services:
     depends_on:
     - "postgres"
     ports:
-    - "4466:4466"
+    - "127.0.0.1:4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
