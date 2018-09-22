@@ -16,6 +16,16 @@ export default {
               id: userId,
             },
           },
+          channels: {
+            create: {
+              name: 'general',
+              author: {
+                connect: {
+                  id: userId,
+                },
+              },
+            },
+          },
         },
       },
       info,
