@@ -1,7 +1,7 @@
 import { getUserId, Context } from '../../utils'
 export default {
   async createGuild(parent, { name }, ctx: Context, info) {
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
     return ctx.db.mutation.createGuild(
       {
         data: {
@@ -23,7 +23,7 @@ export default {
   },
 
   async joinGuild(parent, { guildId }, ctx: Context, info) {
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
     return ctx.db.mutation.updateGuild(
       {
         data: {

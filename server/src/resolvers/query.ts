@@ -1,8 +1,8 @@
 import { getUserId, Context } from '../utils'
 
 export default {
-  guilds(parent, args, ctx: Context, info) {
-    const id = getUserId(ctx)
+  async guilds(parent, args, ctx: Context, info) {
+    const id = await getUserId(ctx)
     return ctx.db.query.guilds({ where: { users_some: { id } } }, info)
   },
 
@@ -19,7 +19,7 @@ export default {
         },
       },
     })
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
     if (!channel.guildId.users.some((el) => el.id === userId)) {
       throw new Error('User not in guild')
     }
@@ -34,8 +34,8 @@ export default {
     return ctx.db.query.user({ where: { id } }, info)
   },
 
-  me(parent, args, ctx: Context, info) {
-    const id = getUserId(ctx)
+  async me(parent, args, ctx: Context, info) {
+    const id = await getUserId(ctx)
     return ctx.db.query.user({ where: { id } }, info)
   },
 }

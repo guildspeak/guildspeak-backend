@@ -24,7 +24,7 @@ const modifyUserMessage = async (
 
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
     const guild = await ctx.db.query.guilds(
       { where: { channels_some: { id: channelId } } },
       `
@@ -66,7 +66,7 @@ export default {
   },
   async deleteMessage(parent, { messageId }, ctx: Context, info): Promise<Message> {
 
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
 
     const result: Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message): Promise<Message> => {
       return await ctx.db.mutation.deleteMessage(
@@ -81,7 +81,7 @@ export default {
     return result
   },
   async editMessage(parent, { messageId, newContent }, ctx: Context, info): Promise<Message> {
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
 
     const result: Message = await modifyUserMessage(ctx, userId, messageId, async (ctx, message): Promise<Message> => {
       return await ctx.db.mutation.updateMessage(

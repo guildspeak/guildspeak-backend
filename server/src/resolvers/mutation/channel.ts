@@ -2,7 +2,7 @@ import { getUserId, Context } from '../../utils'
 
 export default {
   async createChannel(parent, { name, guildId }, ctx: Context, info) {
-    const userId = getUserId(ctx)
+    const userId = await getUserId(ctx)
     return ctx.db.mutation.createChannel(
       {
         data: {
