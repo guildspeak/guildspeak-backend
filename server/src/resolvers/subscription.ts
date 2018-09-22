@@ -29,6 +29,22 @@ export default {
       )
     },
   },
+  guildChannelsSubscription: {
+    subscribe: (parent, { guildId }, ctx: Context, info) => {
+      return ctx.db.subscription.channel(
+        {
+          where: {
+            node: {
+              guildId: {
+                id: guildId,
+              },
+            },
+          },
+        },
+        info,
+      )
+    },
+  },
   guildsSubscription: {
     subscribe: (parent, args, ctx: Context, info) => {
       return ctx.db.subscription.guild(

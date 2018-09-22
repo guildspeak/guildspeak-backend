@@ -44,5 +44,6 @@ type Mutation {
 type Subscription {
   channelSubscription(channelId: ID!): ChannelSubscriptionPayload
   guildSubscription(guildId: ID!): GuildSubscriptionPayload
+  guildChannelsSubscription(guildId: ID!): ChannelSubscriptionPayload
   guildsSubscription: GuildSubscriptionPayload
 }
