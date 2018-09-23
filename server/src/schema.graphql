@@ -3,6 +3,7 @@
 # import Message from "./generated/prisma.graphql"
 # import ChannelSubscriptionPayload from "./generated/prisma.graphql"
 # import GuildSubscriptionPayload from "./generated/prisma.graphql"
+# import UserStatus from "./generated/prisma.graphql"
 
 type User {
   id: ID!
@@ -14,6 +15,7 @@ type User {
   createdGuilds: [Guild!]!
   guilds: [Guild!]!
   channels: [Channel!]!
+  status: UserStatus
 }
 
 type Query {

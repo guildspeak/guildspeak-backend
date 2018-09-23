@@ -9,6 +9,12 @@ type User {
   createdGuilds: [Guild!]! @relation(name: "UserCreatedGuilds")
   guilds: [Guild!]! @relation(name: "UserGuilds")
   channels: [Channel!]! @relation(name: "UserChannels")
+  status: UserStatus @default(value: "OFFLINE")
+}
+
+enum UserStatus {
+  ONLINE
+  OFFLINE
 }
 
 type Message {
