@@ -1,8 +1,9 @@
-import { Context } from '../utils'
+import { Context, getUserId, isUserInChannel, isUserInGuild } from '../utils'
 
 export default {
   channelSubscription: {
-    subscribe: (parent, { channelId }, ctx: Context, info) => {
+    subscribe: async (parent, { channelId }, ctx: Context, info) => {
+      await isUserInChannel(ctx, channelId)
       return ctx.db.subscription.channel(
         {
           where: {
@@ -16,7 +17,8 @@ export default {
     },
   },
   guildSubscription: {
-    subscribe: (parent, { guildId }, ctx: Context, info) => {
+    subscribe: async (parent, { guildId }, ctx: Context, info) => {
+      await isUserInGuild(ctx, guildId)
       return ctx.db.subscription.guild(
         {
           where: {
@@ -30,13 +32,17 @@ export default {
     },
   },
   guildChannelsSubscription: {
-    subscribe: (parent, { guildId }, ctx: Context, info) => {
+    subscribe: async (parent, { guildId }, ctx: Context, info) => {
+      const userId = await getUserId(ctx)
       return ctx.db.subscription.channel(
         {
           where: {
             node: {
               guildId: {
                 id: guildId,
+                users_some: {
+                  id: userId,
+                },
               },
             },
           },
@@ -46,9 +52,18 @@ export default {
     },
   },
   guildsSubscription: {
-    subscribe: (parent, args, ctx: Context, info) => {
+    subscribe: async (parent, args, ctx: Context, info) => {
+      const userId = await getUserId(ctx)
       return ctx.db.subscription.guild(
-        {},
+        {
+          where: {
+            node: {
+              users_some: {
+                id: userId,
+              },
+            },
+          },
+        },
         info,
       )
     },
