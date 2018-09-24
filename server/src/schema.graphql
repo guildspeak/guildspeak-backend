@@ -39,6 +39,7 @@ type Mutation {
   createGuild(name: String!): Guild!
   joinGuild(guildId: ID!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
+  renameChannel(channelId: ID!, newName: String!): Channel!
 }
 
 type Subscription {
