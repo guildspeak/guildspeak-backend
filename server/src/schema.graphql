@@ -38,7 +38,9 @@ type Mutation {
   editMessage(messageId: ID!, newContent: String!): Message!
   createGuild(name: String!): Guild!
   joinGuild(guildId: ID!): Guild!
+  renameGuild(guildId: ID!, newName: String!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
+  renameChannel(channelId: ID!, newName: String!): Channel!
 }
 
 type Subscription {
