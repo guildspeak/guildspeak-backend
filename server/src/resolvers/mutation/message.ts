@@ -1,4 +1,4 @@
-import { getUserId, Context } from '../../utils'
+import { getUserId, Context, isUserInChannel } from '../../utils'
 import { Message, ID_Input } from '../../generated/prisma'
 
 const modifyUserMessage = async (
@@ -25,17 +25,7 @@ const modifyUserMessage = async (
 export default {
   async createMessage(parent, { channelId, content }, ctx: Context, info) {
     const userId = await getUserId(ctx)
-    const guild = await ctx.db.query.guilds(
-      { where: { channels_some: { id: channelId } } },
-      `
-      {
-        users {
-          id
-        }
-      }
-      `,
-    )
-    if (!guild[0].users.find(user => user.id === userId)) throw new Error('User not in guild')
+    await isUserInChannel(ctx, channelId)
     const result = await ctx.db.mutation.createMessage(
       {
         data: {

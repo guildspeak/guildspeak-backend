@@ -1,4 +1,4 @@
-import { getUserId, Context } from '../utils'
+import { getUserId, Context, isUserInChannel } from '../utils'
 
 export default {
   async guilds(parent, args, ctx: Context, info) {
@@ -11,19 +11,8 @@ export default {
   },
 
   async channel(parent, { id }, ctx: Context, info) {
-    const channel = await ctx.db.query.channel({ where: { id } }, {
-      ...info,
-      guildId: {
-        users: {
-          id,
-        },
-      },
-    })
-    const userId = await getUserId(ctx)
-    if (!channel.guildId.users.some((el) => el.id === userId)) {
-      throw new Error('User not in guild')
-    }
-    return channel
+    await isUserInChannel(ctx, id)
+    return ctx.db.query.channel({ where: { id } }, info)
   },
 
   users(parent, args, ctx: Context, info) {
