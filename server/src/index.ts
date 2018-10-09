@@ -1,5 +1,4 @@
 import { GraphQLServer } from 'graphql-yoga'
-import { crunch } from 'graphql-crunch'
 import { Prisma } from './generated/prisma'
 import resolvers from './resolvers'
 
@@ -16,12 +15,6 @@ const server = new GraphQLServer({
       debug: true, // log all GraphQL queries & mutations sent to the Prisma API
       // secret: process.env.PRISMA_SECRET, // only needed if specified in `database/prisma.yml` (value set in `.env`)
     }),
-    formatResponse: (response) => {
-      if (response.data) {
-        response.data = crunch(response.data)
-      }
-      return response
-    },
   }),
 })
 server.start((config) => console.log(`Server is running on http://localhost:${config.port}`))
