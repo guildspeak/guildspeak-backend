@@ -5,6 +5,7 @@ import message from './mutation/message'
 import guild from './mutation/guild'
 import channel from './mutation/channel'
 import subscription from './subscription'
+import userStatus from './mutation/userStatus'
 
 export default {
   Query: query,
@@ -13,6 +14,7 @@ export default {
     ...message,
     ...guild,
     ...channel,
+    ...userStatus,
   },
   Subscription: {
     ...subscription,
