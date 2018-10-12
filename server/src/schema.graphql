@@ -42,7 +42,7 @@ type Mutation {
   renameGuild(guildId: ID!, newName: String!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
   renameChannel(channelId: ID!, newName: String!): Channel!
-  setdisableAccount(disabled: Boolean): User!
+  disableAccount(disabled: Boolean): User!
 }
 
 type Subscription {
