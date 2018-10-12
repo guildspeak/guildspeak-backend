@@ -9,6 +9,7 @@ type User {
   createdGuilds: [Guild!]! @relation(name: "UserCreatedGuilds")
   guilds: [Guild!]! @relation(name: "UserGuilds")
   channels: [Channel!]! @relation(name: "UserChannels")
+  disabled: Boolean @default(value: false)
 }
 
 type Message {

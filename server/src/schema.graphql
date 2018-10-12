@@ -14,6 +14,7 @@ type User {
   createdGuilds: [Guild!]!
   guilds: [Guild!]!
   channels: [Channel!]!
+  disabled: Boolean
 }
 
 type Query {
@@ -41,6 +42,7 @@ type Mutation {
   renameGuild(guildId: ID!, newName: String!): Guild!
   createChannel(name: String!, guildId: ID!): Channel!
   renameChannel(channelId: ID!, newName: String!): Channel!
+  setdisableAccount(disabled: Boolean): User!
 }
 
 type Subscription {
