@@ -1,0 +1,29 @@
+{
+  "name": "guildspeak-backend-verification",
+  "version": "0.0.1",
+  "description": "Verification microservice for Guildspeak",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guildspeak/guildspeak-backend.git"
+  },
+  "author": "Bjornskjald <npm@bjorn.ml>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guildspeak/guildspeak-backend/issues"
+  },
+  "homepage": "https://github.com/guildspeak/guildspeak-backend#readme",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "fastify": "^1.9.0",
+    "nodemailer": "^4.6.8",
+    "randomstring": "^1.1.5"
+  },
+  "devDependencies": {
+    "standard": "^11.0.1"
+  }
+}
