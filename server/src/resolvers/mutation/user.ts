@@ -1,5 +1,5 @@
 import { getUserId, Context } from '../../utils'
-import * as bcrypt from 'bcrypt'
+import { hash, compare } from 'bcrypt'
 
 export default {
   async disableAccount(parent, { disabled }, ctx: Context, info) {
@@ -30,8 +30,8 @@ export default {
   async changePassword(parent, { oldPassword, newPassword }, ctx: Context, info){
     const userId = await getUserId(ctx)
     const user = await ctx.db.query.user({ where: { id: userId } })
-    const valid = await bcrypt.compare(oldPassword, user.password)
-    const npassword = await bcrypt.hash(newPassword, 10)
+    const valid = await compare(oldPassword, user.password)
+    const npassword = await hash(newPassword, 10)
     if (!valid) {
       throw new Error('Invalid password')
     }
