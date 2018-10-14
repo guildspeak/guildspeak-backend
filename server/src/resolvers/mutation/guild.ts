@@ -50,4 +50,10 @@ export default {
       info,
     )
   },
+  async renameGuild(parent, { guildId, newName }, ctx: Context, info) {
+    const userId = await getUserId(ctx)
+    const guild = await ctx.db.query.guild({ where: { id: guildId } }, '{ author { id } }')
+    if (guild.author.id !== userId) throw new Error('That\'s not your guild!')
+    return ctx.db.mutation.updateGuild({ where: { id: guildId }, data: { name: newName } }, info)
+  },
 }
