@@ -47,6 +47,7 @@ type Mutation {
   renameChannel(channelId: ID!, newName: String!): Channel!
   disableAccount(disabled: Boolean): User!
   changePassword(oldPassword: String!, newPassword: String!): User!
+  updateStatus(status: UserStatus): User!
 }
 
 type Subscription {
