@@ -16,14 +16,36 @@ export default {
   },
 
   async login(parent, { email, password }, ctx: Context, info) {
+    let pass = password
     const user = await ctx.db.query.user({ where: { email } })
     if (!user) {
       throw new Error(`No such user found for email: ${email}`)
     }
-
-    const valid = await bcrypt.compare(password, user.password)
+    // TODO: Change enable way!
+    if (user.disabled) {
+      if (pass.startsWith('!')) {
+        pass = pass.substr(1)
+      }
+    }
+    const valid = await bcrypt.compare(pass, user.password)
     if (!valid) {
       throw new Error('Invalid password')
+    }
+
+    if (user.disabled) {
+      // TODO: Change enable way!
+      if (password.startsWith('!')) {
+        ctx.db.mutation.updateUser({
+          data: {
+            disabled: false,
+          },
+          where: {
+            email: email,
+          },
+        })
+      } else {
+        throw new Error('Account is disabled. Please enable your account. (Temporary resolve: give "!" before your password')
+      }
     }
 
     return {

@@ -10,6 +10,7 @@ type User {
   guilds: [Guild!]! @relation(name: "UserGuilds")
   channels: [Channel!]! @relation(name: "UserChannels")
   status: UserStatus @default(value: "OFFLINE")
+  disabled: Boolean @default(value: false)
 }
 
 enum UserStatus {
