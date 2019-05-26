@@ -1,15 +1,15 @@
 type User {
-  id: ID! @unique
+  id: ID! @id
   username: String! @unique
   password: String!
   email: String! @unique
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   messages: [Message!]! @relation(name: "UserMessages")
   createdGuilds: [Guild!]! @relation(name: "UserCreatedGuilds")
   guilds: [Guild!]! @relation(name: "UserGuilds")
   channels: [Channel!]! @relation(name: "UserChannels")
-  status: UserStatus @default(value: "OFFLINE")
+  status: UserStatus @default(value: OFFLINE)
   disabled: Boolean @default(value: false)
 }
 
@@ -19,29 +19,29 @@ enum UserStatus {
 }
 
 type Message {
-  id: ID! @unique
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  id: ID! @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   channelId: Channel!
   content: String!
   author: User! @relation(name: "UserMessages")
 }
 
 type Guild {
-  id: ID! @unique
+  id: ID! @id
   name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   author: User! @relation(name: "UserCreatedGuilds")
   users: [User!]! @relation(name: "UserGuilds")
   channels: [Channel!]!
 }
 
 type Channel {
-  id: ID! @unique
+  id: ID! @id
   name: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
   lastMessage: DateTime
   author: User! @relation(name: "UserChannels")
   guildId: Guild!

@@ -1,25 +1,13 @@
-import query from './query'
-import auth from './mutation/auth'
-import authPayload from './authPayload'
-import message from './mutation/message'
-import guild from './mutation/guild'
-import channel from './mutation/channel'
-import subscription from './subscription'
-import user from './mutation/user'
-import userStatus from './mutation/userStatus'
+import { Query } from './Query'
+import { User } from './User'
+import { Mutation } from './Mutation'
+import { AuthPayload } from './AuthPayload'
+import * as Subscription from './Subscription'
 
 export default {
-  Query: query,
-  Mutation: {
-    ...auth,
-    ...message,
-    ...guild,
-    ...channel,
-    ...user,
-    ...userStatus,
-  },
-  Subscription: {
-    ...subscription,
-  },
-  AuthPayload: authPayload,
+  Query,
+  User,
+  Mutation,
+  AuthPayload,
+  Subscription
 }

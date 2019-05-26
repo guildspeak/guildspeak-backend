@@ -1,30 +1,55 @@
-import { getUserId, Context, isUserInChannel } from '../utils'
+import { getUserId, isUserInChannel } from '../utils'
+import { idArg, queryType } from 'nexus'
+import { Context } from '../types'
 
-export default {
-  async guilds(parent, args, ctx: Context, info) {
-    const id = await getUserId(ctx)
-    return ctx.db.query.guilds({ where: { users_some: { id } } }, info)
-  },
+export const Query = queryType({
+  definition(t) {
+    t.list.field('guilds', {
+      type: 'Guild',
+      resolve: async (parent, args, ctx: Context) => {
+        const id = await getUserId(ctx)
+        return ctx.prisma.guilds({ where: { users_some: { id } } })
+      }
+    })
 
-  guild(parent, { id }, ctx: Context, info) {
-    return ctx.db.query.guild({ where: { id } }, info)
-  },
+    t.field('guild', {
+      type: 'Guild',
+      resolve: async (parent, args, ctx: Context) => {
+        const id = await getUserId(ctx)
+        return ctx.prisma.guild({ id })
+      }
+    })
 
-  async channel(parent, { id }, ctx: Context, info) {
-    await isUserInChannel(ctx, id)
-    return ctx.db.query.channel({ where: { id } }, info)
-  },
+    t.field('channel', {
+      type: 'Channel',
+      args: { id: idArg() },
+      resolve: async (parent, { id }, ctx: Context) => {
+        await isUserInChannel(ctx, id)
+        return ctx.prisma.channel({ id })
+      }
+    })
 
-  users(parent, args, ctx: Context, info) {
-    return ctx.db.query.users({}, info)
-  },
+    t.list.field('users', {
+      type: 'User',
+      resolve: async (parent, args, ctx: Context) => {
+        return ctx.prisma.users({})
+      }
+    })
 
-  user(parent, { id }, ctx: Context, info) {
-    return ctx.db.query.user({ where: { id } }, info)
-  },
+    t.field('user', {
+      type: 'User',
+      args: { id: idArg() },
+      resolve: async (parent, { id }, ctx: Context) => {
+        return ctx.prisma.user({ id })
+      }
+    })
 
-  async me(parent, args, ctx: Context, info) {
-    const id = await getUserId(ctx)
-    return ctx.db.query.user({ where: { id } }, info)
-  },
-}
+    t.field('me', {
+      type: 'User',
+      resolve: async (parent, args, ctx: Context) => {
+        const userId = await getUserId(ctx)
+        return ctx.prisma.user({ id: userId })
+      }
+    })
+  }
+})

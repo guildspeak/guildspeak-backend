@@ -1,71 +1,95 @@
-import { Context, getUserId, isUserInChannel, isUserInGuild } from '../utils'
+import { idArg, subscriptionField } from 'nexus'
+import { isUserInChannel, isUserInGuild, getUserId } from '../utils'
+import { Channel } from '../generated/prisma-client'
+import { Context } from '../types'
 
-export default {
-  channelSubscription: {
-    subscribe: async (parent, { channelId }, ctx: Context, info) => {
-      await isUserInChannel(ctx, channelId)
-      return ctx.db.subscription.channel(
-        {
-          where: {
-            node: {
-              id: channelId,
-            },
-          },
-        },
-        info,
-      )
-    },
+export const channelSubscription = subscriptionField('channelSubscription', {
+  type: 'Channel',
+  args: { channelId: idArg() },
+  async subscribe(root, { channelId }, ctx: Context) {
+    await isUserInChannel(ctx, channelId)
+    const channelIterator: AsyncIterator<Channel> = await ctx.prisma.$subscribe
+      .channel({
+        mutation_in: ['CREATED', 'UPDATED'],
+        node: {
+          id: channelId
+        }
+      })
+      .node()
+
+    return channelIterator
   },
-  guildSubscription: {
-    subscribe: async (parent, { guildId }, ctx: Context, info) => {
-      await isUserInGuild(ctx, guildId)
-      return ctx.db.subscription.guild(
-        {
-          where: {
-            node: {
-              id: guildId,
-            },
-          },
-        },
-        info,
-      )
-    },
+  resolve(payload) {
+    return payload
+  }
+})
+
+export const guildSubscription = subscriptionField('guildSubscription', {
+  type: 'Guild',
+  args: { guildId: idArg() },
+  async subscribe(root, { guildId }, ctx: Context) {
+    await isUserInGuild(ctx, guildId)
+    const guildIterator: AsyncIterator<Channel> = await ctx.prisma.$subscribe
+      .guild({
+        mutation_in: ['CREATED', 'UPDATED'],
+        node: {
+          id: guildId
+        }
+      })
+      .node()
+
+    return guildIterator
   },
-  guildChannelsSubscription: {
-    subscribe: async (parent, { guildId }, ctx: Context, info) => {
-      const userId = await getUserId(ctx)
-      return ctx.db.subscription.channel(
-        {
-          where: {
-            node: {
-              guildId: {
-                id: guildId,
-                users_some: {
-                  id: userId,
-                },
-              },
-            },
-          },
-        },
-        info,
-      )
-    },
+  resolve(payload) {
+    return payload
+  }
+})
+
+export const guildChannelsSubscription = subscriptionField('guildChannelsSubscription', {
+  type: 'Channel',
+  args: { guildId: idArg() },
+  async subscribe(root, { guildId }, ctx: Context) {
+    const userId = await getUserId(ctx)
+    const guildChannelsIterator: AsyncIterator<Channel> = await ctx.prisma.$subscribe
+      .channel({
+        mutation_in: ['CREATED', 'UPDATED'],
+        node: {
+          guildId: {
+            id: guildId,
+            users_some: {
+              id: userId
+            }
+          }
+        }
+      })
+      .node()
+
+    return guildChannelsIterator
   },
-  guildsSubscription: {
-    subscribe: async (parent, args, ctx: Context, info) => {
-      const userId = await getUserId(ctx)
-      return ctx.db.subscription.guild(
-        {
-          where: {
-            node: {
-              users_some: {
-                id: userId,
-              },
-            },
-          },
-        },
-        info,
-      )
-    },
+  resolve(payload) {
+    return payload
+  }
+})
+
+export const guildsSubscription = subscriptionField('guildsSubscription', {
+  type: 'Guild',
+  args: { guildId: idArg() },
+  async subscribe(root, args, ctx: Context) {
+    const userId = await getUserId(ctx)
+    const guildChannelsIterator: AsyncIterator<Channel> = await ctx.prisma.$subscribe
+      .guild({
+        mutation_in: ['CREATED', 'UPDATED'],
+        node: {
+          users_some: {
+            id: userId
+          }
+        }
+      })
+      .node()
+
+    return guildChannelsIterator
   },
-}
+  resolve(payload) {
+    return payload
+  }
+})

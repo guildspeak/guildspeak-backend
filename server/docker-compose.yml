@@ -1,10 +1,10 @@
-version: '3'
+version: "3"
 services:
   prisma:
-    image: prismagraphql/prisma:1.30.0
+    image: prismagraphql/prisma:1.33
     restart: always
-    depends_on:
-    - "postgres"
+    ports:
+      - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         port: 4466
@@ -14,9 +14,10 @@ services:
           default:
             connector: postgres
             host: postgres
-            port: 5432
             user: prisma
             password: prisma
+            rawAccess: true
+            port: 5432
             migrations: true
   postgres:
     image: postgres
@@ -30,11 +31,11 @@ services:
     build: .
     restart: always
     ports:
-    - "4000:4000"
+      - "4000:4000"
     environment:
       PRISMA_ENDPOINT: http://prisma:4466
     env_file: ./.env
     depends_on:
-    - "prisma"
+      - "prisma"
 volumes:
   postgres:

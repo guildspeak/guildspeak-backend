@@ -1,7 +1,9 @@
-import { Context } from '../utils'
+import { objectType } from 'nexus'
 
-export default {
-  user: async ({ user: { id } }, args, ctx: Context, info) => {
-    return ctx.db.query.user({ where: { id } }, info)
-  },
-}
+export const AuthPayload = objectType({
+  name: 'AuthPayload',
+  definition(t) {
+    t.string('token')
+    t.field('user', { type: 'User' })
+  }
+})
