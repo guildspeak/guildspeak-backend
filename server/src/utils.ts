@@ -10,10 +10,8 @@ export async function getUserId(ctx: Context) {
       const { userId } = jwt.verify(token, process.env.JWT_SECRET) as {
         userId: string
       }
-      const user = await ctx.prisma.user({
-        id: userId
-      })
-      if (!user.id) throw new Error('User not found!')
+      const exist = await ctx.prisma.$exists.user({ id: userId })
+      if (!exist) throw new Error('User not found!')
       return userId
     } catch (e) {
       throw new Error(`Session error: ${e}`)
