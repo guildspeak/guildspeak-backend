@@ -5,7 +5,7 @@ import { PubSub } from 'graphql-subscriptions'
 import { makePrismaSchema } from 'nexus-prisma'
 import datamodelInfo from './generated/nexus-prisma'
 import * as path from 'path'
-// import { permissions } from './permissions'
+import { permissions as permissionsMiddleware } from './permissions'
 
 const pubsub = new PubSub()
 
@@ -45,8 +45,7 @@ const schema = makePrismaSchema({
 
 const server = new GraphQLServer({
   schema,
-  // TODO: enable if permissions are done
-  // middlewares: [permissions],
+  middlewares: [permissionsMiddleware],
   context: req => ({
     ...req,
     prisma,

@@ -26,19 +26,19 @@ export async function getUserId(ctx: Context) {
 export async function isUserInChannel(ctx: Context, channelId: string) {
   const userId = await getUserId(ctx)
   const channel = ctx.prisma.channel({ id: channelId })
-  const users = await channel.guildId().users()
+  const users = await channel.guildId().users({ where: { id: userId } })
 
-  if (!users.find(user => user.id === userId)) throw new Error('User not in channel')
+  if (!users) throw new Error('User not in channel')
+  return true
 }
 
 export async function isUserInGuild(ctx: Context, guildId: string) {
   const userId = await getUserId(ctx)
   const guild = ctx.prisma.guild({ id: guildId })
-  const users = await guild.users()
+  const users = await guild.users({ where: { id: userId } })
 
-  if (!users.find(user => user.id === userId)) {
-    throw new Error('User not in guild')
-  }
+  if (!users) throw new Error('User not in guild')
+  return true
 }
 
 /**

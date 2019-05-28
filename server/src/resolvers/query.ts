@@ -24,7 +24,6 @@ export const Query = queryType({
       type: 'Channel',
       args: { id: idArg() },
       resolve: async (parent, { id }, ctx: Context) => {
-        await isUserInChannel(ctx, id)
         return ctx.prisma.channel({ id })
       }
     })

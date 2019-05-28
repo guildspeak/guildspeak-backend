@@ -154,7 +154,6 @@ export const Mutation = mutationType({
       },
       resolve: async (parent, { channelId, content }, ctx: Context) => {
         const userId = await getUserId(ctx)
-        await isUserInChannel(ctx, channelId)
         const result = await ctx.prisma.createMessage({
           content: content,
           author: {
@@ -311,7 +310,6 @@ export const Mutation = mutationType({
       },
       resolve: async (parent, { name, guildId }, ctx: Context) => {
         const userId = await getUserId(ctx)
-        await isUserInGuild(ctx, guildId)
         return ctx.prisma.createChannel({
           name: name,
           guildId: {
