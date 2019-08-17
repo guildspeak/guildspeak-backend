@@ -45,7 +45,7 @@ const schema = makePrismaSchema({
 
 const server = new GraphQLServer({
   schema,
-  middlewares: [permissionsMiddleware],
+  // middlewares: [permissionsMiddleware],
   context: req => ({
     ...req,
     prisma,

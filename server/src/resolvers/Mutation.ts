@@ -79,10 +79,11 @@ export const Mutation = mutationType({
               'Account is disabled. Please enable your account. (Temporary resolve: give "!" before your password'
             )
           }
-          return {
-            token: sign({ userId: user.id }, process.env.JWT_SECRET),
-            user: user
-          }
+     
+        }
+        return {
+          token: sign({ userId: user.id }, process.env.JWT_SECRET),
+          user: user
         }
       }
     })

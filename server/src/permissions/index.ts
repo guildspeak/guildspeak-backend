@@ -49,15 +49,15 @@ export const permissions = shield({
     createGuild: rules.isAuthenticatedUser,
     joinGuild: rules.isAuthenticatedUser
   },
-  AuthPayload: {
-    token: rules.isAuthenticatedUser,
-    user: rules.isAuthenticatedUser
-  },
-  User: {
-    email: rules.isAuthenticatedUser,
-    createdAt: rules.isAuthenticatedUser,
-    updatedAt: rules.isAuthenticatedUser,
-    createdGuilds: rules.isAuthenticatedUser,
-    channels: rules.isAuthenticatedUser
-  }
+  // AuthPayload: {
+  //   token: rules.isAuthenticatedUser,
+  //   user: rules.isAuthenticatedUser
+  // },
+  // User: {
+  //   email: rules.isAuthenticatedUser,
+  //   createdAt: rules.isAuthenticatedUser,
+  //   updatedAt: rules.isAuthenticatedUser,
+  //   createdGuilds: rules.isAuthenticatedUser,
+  //   channels: rules.isAuthenticatedUser
+  // }
 })
