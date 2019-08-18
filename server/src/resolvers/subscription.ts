@@ -5,12 +5,35 @@ import { Context } from '../types'
 
 export const channelSubscription = subscriptionField('channelSubscription', {
   type: 'Channel',
-  args: { channelId: idArg() },
-  async subscribe(root, { channelId }, ctx: Context) {
+  args: { id: idArg() },
+  async subscribe(root, { id }, ctx: Context) {
     const channelIterator: AsyncIterator<ChannelSubscriptionPayload> = await ctx.prisma.$subscribe
       .channel({
+        mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
         node: {
-          id: channelId
+          id: id
+        }
+      })
+      .node()
+
+    return channelIterator
+  },
+  resolve(payload) {
+    return payload
+  }
+})
+
+export const guildChannelsSubscription = subscriptionField('guildChannelsSubscription', {
+  type: 'Channel',
+  args: { id: idArg() },
+  async subscribe(root, { id }, ctx: Context) {
+    const channelIterator: AsyncIterator<ChannelSubscriptionPayload> = await ctx.prisma.$subscribe
+      .channel({
+        mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
+        node: {
+          guildId: {
+            id: id
+          }
         }
       })
       .node()
@@ -24,12 +47,17 @@ export const channelSubscription = subscriptionField('channelSubscription', {
 
 export const guildSubscription = subscriptionField('guildSubscription', {
   type: 'Guild',
-  args: { guildId: idArg() },
-  async subscribe(root, { guildId }, ctx: Context) {
+  args: { id: idArg() },
+  async subscribe(root, { id }, ctx: Context) {
+    // const userId = await getUserId(ctx)
     const guildIterator: AsyncIterator<GuildSubscriptionPayload> = await ctx.prisma.$subscribe
       .guild({
+        mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
         node: {
-          id: guildId
+          id: id
+          // users_some: {
+          //   id: userId
+          // }
         }
       })
       .node()
@@ -41,42 +69,18 @@ export const guildSubscription = subscriptionField('guildSubscription', {
   }
 })
 
-export const guildChannelsSubscription = subscriptionField('guildChannelsSubscription', {
-  type: 'Channel',
-  args: { guildId: idArg() },
-  async subscribe(root, { guildId }, ctx: Context) {
-    const userId = await getUserId(ctx)
-    const guildChannelsIterator: AsyncIterator<ChannelSubscriptionPayload> = await ctx.prisma.$subscribe
-      .channel({
-        node: {
-          guildId: {
-            id: guildId,
-            users_some: {
-              id: userId
-            }
-          }
-        }
-      })
-      .node()
-
-    return guildChannelsIterator
-  },
-  resolve(payload) {
-    return payload
-  }
-})
-
 export const guildsSubscription = subscriptionField('guildsSubscription', {
   type: 'Guild',
   args: { guildId: idArg() },
   async subscribe(root, args, ctx: Context) {
-    const userId = await getUserId(ctx)
+    // const userId = await getUserId(ctx)
     const guildChannelsIterator: AsyncIterator<GuildSubscriptionPayload> = await ctx.prisma.$subscribe
       .guild({
+        mutation_in: ['CREATED', 'UPDATED', 'DELETED'],
         node: {
-          users_some: {
-            id: userId
-          }
+          // users_some: {
+          //   id: userId
+          // }
         }
       })
       .node()

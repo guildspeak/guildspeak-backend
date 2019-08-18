@@ -14,8 +14,8 @@ export const Query = queryType({
 
     t.field('guild', {
       type: 'Guild',
-      resolve: async (parent, args, ctx: Context) => {
-        const id = await getUserId(ctx)
+      args: { id: idArg() },
+      resolve: async (parent, { id }, ctx: Context) => {
         return ctx.prisma.guild({ id })
       }
     })
