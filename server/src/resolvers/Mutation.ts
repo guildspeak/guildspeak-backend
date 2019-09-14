@@ -79,7 +79,6 @@ export const Mutation = mutationType({
               'Account is disabled. Please enable your account. (Temporary resolve: give "!" before your password'
             )
           }
-     
         }
         return {
           token: sign({ userId: user.id }, process.env.JWT_SECRET),
@@ -186,18 +185,11 @@ export const Mutation = mutationType({
         messageId: idArg()
       },
       resolve: async (parent, { messageId }, ctx: Context) => {
-        const userId = await getUserId(ctx)
+        // TODO: check if deletes only for logged user
+        const result: Message = await ctx.prisma.deleteMessage({
+          id: messageId
+        })
 
-        const result: Message = await modifyUserMessage(
-          ctx,
-          userId,
-          messageId,
-          async (ctx: Context, message: Message): Promise<Message> => {
-            return await ctx.prisma.deleteMessage({
-              id: messageId
-            })
-          }
-        )
         return result
       }
     })
@@ -209,23 +201,14 @@ export const Mutation = mutationType({
         newContent: stringArg()
       },
       resolve: async (parent, { messageId, newContent }, ctx: Context) => {
-        const userId = await getUserId(ctx)
-
-        const result: Message = await modifyUserMessage(
-          ctx,
-          userId,
-          messageId,
-          async (ctx: Context, message: Message): Promise<Message> => {
-            return await ctx.prisma.updateMessage({
-              data: {
-                content: newContent
-              },
-              where: {
-                id: messageId
-              }
-            })
+        const result: Message = await ctx.prisma.updateMessage({
+          data: {
+            content: newContent
+          },
+          where: {
+            id: messageId
           }
-        )
+        })
 
         return result
       }
