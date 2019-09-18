@@ -134,7 +134,7 @@ export const Mutation = mutationType({
         if (!valid) {
           throw new Error('Invalid password')
         }
-        return ctx.prisma.updateUser({
+        return await ctx.prisma.updateUser({
           where: {
             id: userId
           },
@@ -221,7 +221,7 @@ export const Mutation = mutationType({
       },
       resolve: async (parent, { name }, ctx: Context) => {
         const userId = await getUserId(ctx)
-        return ctx.prisma.createGuild({
+        return await ctx.prisma.createGuild({
           name: name,
           author: {
             connect: {
@@ -254,7 +254,7 @@ export const Mutation = mutationType({
       },
       resolve: async (parent, { guildId }, ctx: Context) => {
         const userId = await getUserId(ctx)
-        return ctx.prisma.updateGuild({
+        return await ctx.prisma.updateGuild({
           data: {
             users: {
               connect: {
@@ -281,7 +281,7 @@ export const Mutation = mutationType({
         const author = await guild.author()
 
         if (author.id !== userId) throw new Error("That's not your guild!")
-        return ctx.prisma.updateGuild({ where: { id: guildId }, data: { name: newName } })
+        return await ctx.prisma.updateGuild({ where: { id: guildId }, data: { name: newName } })
       }
     })
 
@@ -294,7 +294,7 @@ export const Mutation = mutationType({
       },
       resolve: async (parent, { name, guildId }, ctx: Context) => {
         const userId = await getUserId(ctx)
-        return ctx.prisma.createChannel({
+        return await ctx.prisma.createChannel({
           name: name,
           guildId: {
             connect: {
@@ -322,7 +322,7 @@ export const Mutation = mutationType({
         const author = await channel.author()
 
         if (author.id !== userId) throw new Error("That's not your channel!")
-        return ctx.prisma.updateChannel({ where: { id: channelId }, data: { name: newName } })
+        return await ctx.prisma.updateChannel({ where: { id: channelId }, data: { name: newName } })
       }
     })
   }

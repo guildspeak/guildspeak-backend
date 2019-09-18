@@ -8,7 +8,7 @@ export const Query = queryType({
       type: 'Guild',
       resolve: async (parent, args, ctx: Context) => {
         const id = await getUserId(ctx)
-        return ctx.prisma.guilds({ where: { users_some: { id } } })
+        return await ctx.prisma.guilds({ where: { users_some: { id } } })
       }
     })
 
@@ -16,7 +16,7 @@ export const Query = queryType({
       type: 'Guild',
       args: { id: idArg() },
       resolve: async (parent, { id }, ctx: Context) => {
-        return ctx.prisma.guild({ id })
+        return await ctx.prisma.guild({ id })
       }
     })
 
@@ -24,14 +24,14 @@ export const Query = queryType({
       type: 'Channel',
       args: { id: idArg() },
       resolve: async (parent, { id }, ctx: Context) => {
-        return ctx.prisma.channel({ id })
+        return await ctx.prisma.channel({ id })
       }
     })
 
     t.list.field('users', {
       type: 'User',
       resolve: async (parent, args, ctx: Context) => {
-        return ctx.prisma.users({})
+        return await ctx.prisma.users({})
       }
     })
 
@@ -39,7 +39,7 @@ export const Query = queryType({
       type: 'User',
       args: { id: idArg() },
       resolve: async (parent, { id }, ctx: Context) => {
-        return ctx.prisma.user({ id })
+        return await ctx.prisma.user({ id })
       }
     })
 
@@ -47,7 +47,7 @@ export const Query = queryType({
       type: 'User',
       resolve: async (parent, args, ctx: Context) => {
         const userId = await getUserId(ctx)
-        return ctx.prisma.user({ id: userId })
+        return await ctx.prisma.user({ id: userId })
       }
     })
   }
