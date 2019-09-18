@@ -18,12 +18,12 @@
   },
   "homepage": "https://github.com/guildspeak/guildspeak-backend#readme",
   "dependencies": {
-    "dotenv": "^8.0.0",
-    "fastify": "^2.7.1",
+    "dotenv": "^8.1.0",
+    "fastify": "^2.8.0",
     "nodemailer": "^6.3.0",
     "randomstring": "^1.1.5"
   },
   "devDependencies": {
-    "standard": "^13.1.0"
+    "standard": "^14.3.0"
   }
 }
