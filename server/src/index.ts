@@ -5,7 +5,6 @@ import { PubSub } from 'graphql-subscriptions'
 import { makePrismaSchema } from 'nexus-prisma'
 import datamodelInfo from './generated/nexus-prisma'
 import * as path from 'path'
-import * as jwt from 'jsonwebtoken'
 import { IncomingMessage } from 'http'
 
 const pubsub = new PubSub()
@@ -58,26 +57,7 @@ server.start(
   {
     subscriptions: {
       onConnect: async (connectionParams: { token: string }, webSocket, ctx) => {
-        if (connectionParams.token) {
-          const token = connectionParams.token
-          const { userId } = jwt.verify(token, process.env.JWT_SECRET) as {
-            userId: string
-          }
-          const exist = await prisma.$exists.user({ id: userId })
-          if (exist) {
-            console.log('User connected', userId)
-            await prisma.updateUser({
-              data: {
-                status: 'ONLINE'
-              },
-              where: {
-                id: userId
-              }
-            })
-          } else {
-            throw new Error('User not found!')
-          }
-        }
+        console.log('User connected')
       },
       onDisconnect: (webSocket, ctx: { request: IncomingMessage }) => {
         console.log('User disconnected')

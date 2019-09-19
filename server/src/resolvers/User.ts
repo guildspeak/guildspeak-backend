@@ -25,7 +25,7 @@ export const User = prismaObjectType({
         name: 'channels',
         args: []
       },
-      'status',
+      'lastSeen',
       'disabled'
     ])
   }

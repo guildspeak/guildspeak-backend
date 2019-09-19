@@ -3,7 +3,7 @@ import { getUserId, isUserInChannel, isUserInGuild } from '../utils'
 import { sign } from 'jsonwebtoken'
 import { hash, compare } from 'bcrypt'
 import { Context } from '../types'
-import { Message, ID_Input, UserStatus } from '../generated/prisma-client'
+import { Message, ID_Input } from '../generated/prisma-client'
 
 const modifyUserMessage = async (
   ctx: Context,
@@ -39,7 +39,8 @@ export const Mutation = mutationType({
         const user = await ctx.prisma.createUser({
           username,
           email,
-          password: hashedPassword
+          password: hashedPassword,
+          lastSeen: new Date().toISOString()
         })
         return {
           token: sign({ userId: user.id }, process.env.JWT_SECRET),
@@ -87,15 +88,14 @@ export const Mutation = mutationType({
       }
     })
     // User
-    t.field('updateStatus', {
+    t.field('updateUserStatus', {
       type: 'User',
-      args: { status: arg({ type: 'UserStatus' }) },
-      resolve: async (parent, args, ctx: Context) => {
-        const status = args.status as UserStatus
+      args: { lastSeen: arg({ type: 'DateTime' }) },
+      resolve: async (parent, { lastSeen }, ctx: Context) => {
         const userId = await getUserId(ctx)
         return ctx.prisma.updateUser({
           data: {
-            status: status
+            lastSeen: lastSeen
           },
           where: {
             id: userId
