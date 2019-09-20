@@ -185,12 +185,15 @@ export const Mutation = mutationType({
         messageId: idArg()
       },
       resolve: async (parent, { messageId }, ctx: Context) => {
-        // TODO: check if deletes only for logged user
-        const result: Message = await ctx.prisma.deleteMessage({
+        const userId = await getUserId(ctx)
+        const result = await ctx.prisma.deleteManyMessages({
+          author: {
+            id: userId
+          },
           id: messageId
         })
 
-        return result
+        return result[0]
       }
     })
 
